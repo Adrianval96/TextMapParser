@@ -77,7 +77,7 @@ class LineParser:
             # Case 1. Walls fit and room is created.
             if room.getLeftWall() in wallPositions and room.getRightWall() in wallPositions:
                 self.addRoomToLists(room)
-                print("Created new Room: " + room.__str__())
+                # print("Created new Room: " + room.__str__())
 
             # Case 2. We find a matching left wall and set our right-side neighbour wall to this left wall.
             elif room.getLeftWall() in wallPositions and room.getRightWall() not in wallPositions:
@@ -101,12 +101,9 @@ class LineParser:
         return list
 
     def getRoomFromPosition(self, pos):
-        # print(pos)
         for room in self.getOpenRooms():
-            # print(room)
             if room.getLeftWall() <= pos < room.getRightWall():
                 return room
-        print("ERROR FINDING ROOM FROM POSITION")
         return -1
 
     def findAdjacentRoom(self, direction, room):
@@ -117,7 +114,7 @@ class LineParser:
             if direction == "right":
                 if room.getRightWall() == candidate.getLeftWall():
                     return candidate
-        print("No adjacent room found.")
+        # print("No adjacent room found.")
         return None
 
 
@@ -130,7 +127,6 @@ class LineParser:
                 this_room = self.getRoomFromPosition(index)
                 if this_room != -1:
                     this_room.setRoomName(name)
-                print(this_room)
 
 
     def updateChairsFromLine(self, chairs):

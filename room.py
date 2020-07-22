@@ -21,7 +21,6 @@ class Room:
 
     def setParseFinish(self):
         self.parseFinish = True
-        print(self)
 
     def getParseFinish(self):
         return self.parseFinish
@@ -66,10 +65,6 @@ class Room:
         elif type == "W":
             return self.getW()
 
-
-
-
-
     def addChairToRoom(self, str):
         if str == "P":
             self.P += 1
@@ -81,6 +76,11 @@ class Room:
             self.C += 1
 
     def __str__(self):
+        return "{}: \n W: {}, P: {}, S: {}, C: {}".format(self.getRoomName(), self.getW(), self.getP(), self.getS(), self.getC())
+
+
+    # Deprecated __str__() method.
+    #def __str__(self):
         #args = {'id': self.id, 'name': self.name, 'lw': self.leftWall, 'rw': self.rightWall,
         #        'p': self.P, 's': self.S, 'w': self.W, 'c': self.C, 'st': self.parseFinish}
 
@@ -93,8 +93,3 @@ class Room:
         #W: {w}
         #C: {c}
         #Closed: {st}'''.format(**args)
-        return "{}: \n W: {}, P: {}, S: {}, C: {}".format(self.getRoomName(), self.getW(), self.getP(), self.getS(), self.getC())
-
-
-    def toString(self):
-        return "{}: \n W: {}, P: {}, S: {}, C: {}".format(self.getRoomName(), self.getW(), self.getP(), self.getS(), self.getC())
