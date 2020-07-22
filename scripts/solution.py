@@ -213,7 +213,10 @@ def houseSummary():
 
 
 def __main__():
-    print(parse_file("rooms_noShifting.txt"))
+    print(parse_file("maps/rooms_noShifting.txt"))
+
+    # Unfortunately the standard map will not work correctly due to the lack of wall shifting procedures
+    #print(parse_file("./maps/rooms.txt"))
 
 
 __main__()

@@ -17,7 +17,7 @@ class LineParser:
         self.room_count = 0
         self.lineLimit = 50
 
-        self.lines_in_file = utils.file_len("rooms.txt")
+        self.lines_in_file = utils.file_len("maps/rooms.txt")
 
     def getInHouseRooms(self):
         return self.in_house_rooms
