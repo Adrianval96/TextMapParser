@@ -22,6 +22,7 @@ ChairPattern does not consider multiple chairs right next to each other
 roomNamePattern = re.compile("\([a-z ]*\)", re.IGNORECASE)
 
 chairPattern = re.compile("([CWPS])+")
+
 #There is a problem with shiftingWallsPattern. This feature will not work in our implementation.
 shiftingWallsPattern = re.compile(r"[\\/]+")
 lowerWallPattern = re.compile("[\+\-*\+]+")
@@ -98,41 +99,31 @@ def adjustFromLowerWalls(line, lineIndex):
     for match in re.finditer(lowerWallPattern, line):
 
         if len(re.findall('\+', match.group())) <= 2:
-            print("Lower walls standard case (+----------+")
-            print("Bounds of wall: " + str(match.start()) + ", " + str(match.end() - 1))
+            # Lower walls standard case (+----------+)
             checkWallEdgesAndTransform(match.start(), match.end() - 1, lineIndex)
         else:
-            print("Lower walls composite case (+----------+----------+")
+            # Lower walls composite case (+----------+----------+)
             # If code finds more than a plus sign in the same wall match it will launch a different transform for each pair.
             plusPositions = []
             for plusSign in re.finditer('\+', match.group()):
                 plusPositions.append(match.start() + plusSign.start())
 
             for i in range(len(plusPositions) - 1):
-                print("Bounds of sub-wall: " + str(plusPositions[i]) + ", " + str(plusPositions[i+1]))
                 checkWallEdgesAndTransform(plusPositions[i], plusPositions[i+1], lineIndex)
-
-        print(parser.getEnqueuedRooms())
 
 
 def checkWallEdgesAndTransform(start, end, lineIndex):
     for room in parser.getOpenRooms():
         lb, rb = room.getRoomBounds()
-        #if lineIndex in {8, 12, 17, 22, 31, 35, 44, 50}:
-        #    print("Line: " + str(lineIndex))
-        #    print("Current bounds:" + str(lb) + ", " + str(rb))
-        #    print("Start and end of lower wall pattern:" + str(start) + ", " + str(end))
 
         # If the bounds match that means the room needs to be closed. If a new one must be open depends on next line
         if start == lb and end == rb:
-            print("Case 1 for lower wall. Closing room and opening a new one in next line.")
             # room.setParseFinish()
             parser.removeFromOpenRooms(room)
 
             # this is a necessary condition to prevent further rooms to be created outside the bounds of the map
             if lineIndex >= parser.getLineLimit():
                 break
-            # enqueued_rooms.append([start, end])
             parser.addToQueue(newRoom(start, end))
             break
 
@@ -141,13 +132,10 @@ def checkWallEdgesAndTransform(start, end, lineIndex):
         # This is reflected in the next two 'elif' statements
         elif start == lb and end < rb:
             neighbor = parser.findAdjacentRoom("left", room)
-            # print("Line: " + str(lineIndex))
             print("Case 2 for lower wall. Moving to the right and updating neighbor / creating new room.")
             room.setLeftWall(end)
             if neighbor:
-                #print("Neighbor found. Updating... " + neighbor)
                 neighbor.setRightWall(end)
-                #print("Neighbor after changes:" + neighbor)
             else:
                 # New neighbor is added to queue. It will be added when we move on to next line.
                 parser.addToQueue(newRoom(start, end))
@@ -155,19 +143,16 @@ def checkWallEdgesAndTransform(start, end, lineIndex):
 
         elif start < lb and end == rb:
             neighbor = parser.findAdjacentRoom("right", room)
-            # print("Line: " + str(lineIndex))
             print("Case 3 for lower wall. Moving to the left and updating neighbor / creating new room.")
             room.setRightWall(start)
             if neighbor:
-                #print("Neighbor found. Updating... " + neighbor)
                 neighbor.setLeftWall(start)
-                #print("Neighbor after changes:" + neighbor)
             else:
                 parser.addToQueue(newRoom(start, end))
-                # enqueued_rooms.append([start, end])
             break
         else:
-            print("Room not found in this iteration.")
+            # print("Room not found in this iteration.")
+            pass
 
 
 
@@ -192,9 +177,9 @@ def findChairsInLine(line):
 
 # These methods are meant to check for the wall shifts (i.e line 32-34), but the regular expression does not match.
 def checkforWallShifts(line):
-    print("Checking wall for shifts...")
+    # print("Checking wall for shifts...")
     if re.match(shiftingWallsPattern, line):
-        print("EUREKA")
+        # print("EUREKA")
         return updateWallPositionsOnShift(line)
     return None
 
